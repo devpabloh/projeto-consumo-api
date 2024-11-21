@@ -12,12 +12,24 @@
         .finally(message=> console.log('Processamento concluído.')) */
         
 // Segunda forma de fazer - refatorado
-async function buscarEndereço() {
-    var consultaCEP = await fetch('https://viacep.com.br/ws/01001000/json/')
-    var consultaCepConvertida = await consultaCEP.json();
-   
-    console.log(consultaCepConvertida)
+async function buscarEndereço(cep) {
+    try {
+        var consultaCEP = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        var consultaCepConvertida = await consultaCEP.json();
+        if(consultaCepConvertida.error){
+            throw Error('CEP não existente');
+        }
+        console.log(consultaCepConvertida);
+        return consultaCepConvertida;
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-buscarEndereço()
-        
+var cep = document.getElementById("cep");
+cep.addEventListener("focusout", ()=> buscarEndereço(cep.value))
+
+// Caso precise buscar vários Ceps.
+/* let ceps = ['01001000', '53040110'];
+let conjuntoCeps = ceps.map(valores => buscarEndereço(valores))
+Promise.all(conjuntoCeps).then(respostas => console.log(respostas)) */
