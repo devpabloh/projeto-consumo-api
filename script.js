@@ -13,6 +13,8 @@
         
 // Segunda forma de fazer - refatorado
 async function buscarEndereço(cep) {
+    var mensagemErro = document.getElementById("erro")
+    mensagemErro.innerHTML = ""
     try {
         var consultaCEP = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
         var consultaCepConvertida = await consultaCEP.json();
@@ -22,6 +24,7 @@ async function buscarEndereço(cep) {
         console.log(consultaCepConvertida);
         return consultaCepConvertida;
     } catch (error) {
+        mensagemErro.innerHTML = `<p> CEP inválido. Tente novamente </p>`
         console.log(error)
     }
 }
